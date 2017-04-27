@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Rocoland.Models.OrderItem>
+
+@{
+    ViewBag.Title = "My Orders";
+}
+
+<h2>My Orders</h2>
+
+<table class="table Tableaddtocart">
+    <tr class="addtocard Tableaddtocart">
+        <th>
+            Product Name
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Producer
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th>
+            Delete
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr class="Tableaddtocart">
+        <td class="Tableaddtocart">
+            <img class="img" src="@item.Product.PictrureId" />
+            @Html.DisplayFor(modelItem => item.Product.Name)
+        </td>
+        <td class="Tableaddtocart">
+            @Html.DisplayFor(modelItem => item.Product.Price)
+        </td>
+        <td class="Tableaddtocart">
+            @Html.DisplayFor(modelItem => item.Product.ProducerId)
+        </td>
+        <td>
+            @Html.DisplayTextFor(modelItem => item.Quantity)
+        </td>
+        <td class="Tableaddtocart">
+            <a href='@Url.Action("Delete", "Order",new {id= @item.Id})'>
+                <img style="width: 20px" src='@Url.Content("~/Content/Images/Delete.png")' />
+            </a>
+        </td>
+    </tr>
+}
+
+</table>

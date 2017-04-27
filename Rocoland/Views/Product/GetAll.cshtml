@@ -1,0 +1,125 @@
+﻿@model IEnumerable<Rocoland.Models.Product>
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<h2>Products</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProducerId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProducerId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) 
+            |<a href="#" class="js-delete-product" data-product-id="@item.Id">Delete</a>
+        </td>
+    </tr>
+}
+
+</table>
+
+@section scripts
+{
+    <script>
+
+        //bootbox.confirm({
+        //    message: "Are you sure to delete this product",
+        //    buttons: {
+        //        confirm: {
+        //            label: 'Yes',
+        //            className: 'btn-success',
+        //            callback: function() {
+        //                $.ajax({
+        //                    url: "/api/ProductAPI/" + link.attr("data-product-id"),
+        //                    dataType: "text json",
+        //                    type: "DELETE",
+        //                    data: {},
+        //                    success: function (data, textStatus) { }
+        //                }).done(function () {
+        //                    link.parents("table").fadeOut(function () {
+        //                        link.parents("table").remove();
+        //                    });
+
+        //                }).fail(function () {
+        //                    alert("sth failed");
+        //                });
+        //            }
+        //        },
+        //        cancel: {
+        //            label: 'No',
+        //            className: 'btn-danger'
+        //        }
+        //    },
+        //    callback: function(result) {
+        //        console.log('This was logged in the callback: ' + result);
+        //    }
+        //});
+
+
+        $(document).ready(function() {
+            $(".js-delete-product").click(function(e) {
+                var link = $(e.target);
+                //alert(link.attr("data-product-id"));
+
+                bootbox.confirm("Are you sure to delete this product",
+                    function() {
+
+                        $.ajax({
+                            url: "/api/ProductAPI/" + link.attr("data-product-id"),
+                            dataType: "text json",
+                            type: "DELETE",
+                            data: {},
+                            success: function(data, textStatus) {}
+                        }).done(function() {
+                            link.parents("tr").fadeOut(function() {
+                                link.parents("tr").remove();
+                            });
+
+                        }).fail(function() {
+                            alert("sth failed");
+                        });
+                    });
+
+
+                e.preventDefault();
+            });
+        });
+    </script>
+}

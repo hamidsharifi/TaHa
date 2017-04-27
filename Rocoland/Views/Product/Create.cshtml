@@ -1,0 +1,45 @@
+﻿@model Rocoland.Models.Product
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm("Create", "Product"))
+{
+    @Html.HiddenFor(model => model.Id, new { @class = "form-control" })
+<div class="form-group">
+    @Html.DisplayNameFor(model => model.Name)
+    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model.Name)
+</div>
+<div class="form-group">
+    
+    @Html.DisplayNameFor(model => model.Description)
+    @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model.Description)
+</div>
+    <div class="form-group">
+        @Html.DisplayNameFor(model => model.PictrureId)
+        @Html.TextBoxFor(model => model.PictrureId, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.PictrureId)
+    </div>
+    <div class="form-group">
+        @Html.DisplayNameFor(model => model.ProductType)
+        @Html.DropDownListFor(model => model.ProductTypeId,new SelectList(Model.ProductType,"Id","Name"), new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.ProductType)
+    </div>
+<div class="form-group">
+    @Html.DisplayNameFor(model => model.Price)
+    @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model.Price)
+</div>
+<div class="form-group">
+    @Html.DisplayNameFor(model => model.Producer)
+    @Html.DropDownListFor(model => model.ProducerId, new SelectList(Model.Producer,"Id","Name"), new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model.Producer)
+</div>
+
+<button type="submit" class="btn btn-default">Submit</button>   
+
+}

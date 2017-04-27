@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Rocoland.Models.Product>
+@{
+    ViewBag.Title = "Home Page";
+}
+<div class="shop-container">
+@foreach (var item in Model)
+{
+    <div class="media shop-container grid-item">
+        <div class="media-left media-middle">
+            <a href="#">
+                <img class="media-object img"  src="@item.PictrureId" alt="...">
+            </a>
+        </div>
+        <div class="media-body">
+            <h5 class="media-heading">@item.Name<i class="glyphicon glyphicon-heart-empty js-Add-Favorite" data-product-id="@item.Id"></i></h5>
+        </div>
+        @*<div class="media-body">
+            <i class="glyphicon glyphicon-heart-empty"></i>
+        </div>*@
+        <div>
+            <span class="price">@item.Price</span>  <i class="glyphicon glyphicon-shopping-cart js-Add-Cart" data-product-id="@item.Id" ></i>
+        </div>
+    </div>
+}
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function() {
+            $(".js-Add-Cart").click(function(e) {
+                var link = $(e.target);
+                //        alert(link);
+
+                bootbox.confirm("Are you sure to add this product",
+                    function() {
+
+                        $.ajax({
+                            url: "/api/OrderApi/" + link.attr("data-product-id"),
+                            dataType: "text json",
+                            type: "POST",
+                            data: {},
+                            success: function(data, textStatus) {}
+                        }).done(function() {
+                            link.parents("tr").fadeOut(function() {
+                                link.parents("tr").remove();
+                            });
+
+                        }).fail(function() {
+                            alert("sth failed");
+                        });
+                    });
+
+
+                e.preventDefault();
+            });
+
+            $(".js-Add-Favorite").click(function(e) {
+                var link2 = $(e.target);
+              
+
+                $.ajax({
+                    url: "/api/FavoriteApi/" + link2.attr("data-product-id"),
+                    dataType: "text json",
+                    type: "POST",
+                    data: {},
+                    success: function(data, textStatus) {}
+                }).done(function() {
+                    $(".js-Add-Favorite").addClass("glyphicon-heart").removeClass("glyphicon-heart-empty");
+                    }
+                ).fail(function() {
+                    alert("sth fail");
+                });
+
+                e.preventDefault();
+            });
+        });
+    </script>
+}

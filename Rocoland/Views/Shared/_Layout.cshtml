@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Rocoland</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Rocoland", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Administrators"))
+                {
+                    <li>@Html.ActionLink("Orders", "Index", "Order")</li>
+                    <li>@Html.ActionLink("Products", "GetAll", "Product")</li>
+                }
+            </ul>
+            
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</div>
+<div class="container body-content Row">
+    <div class="ColumnLeft">
+        <ul class="nav nav-pills nav-stacked left-menu">
+            @foreach (var item in Helper.GetProductType())
+            {
+                <li role="presentation" class="active">
+                    @Html.ActionLink(item.Name, "Index", "Home",
+                        routeValues: new
+                        {
+                            ProductTypeId = item.Id
+                        },
+                        htmlAttributes: null
+                        )
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="ColumnRight">
+    @RenderBody()
+    </div>
+   
+</div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "/api/OrderApi/GetOrderNotifications/",
+                dataType: "text json",
+                type: "GET",
+                data: {},
+                success: function (data, textStatus) { }
+            }).done(function (data) {
+                $(".js-notifications-count")
+                    .text(data.length)
+                    .removeClass("hide")
+                    .addClass("animated bounceInDown");
+
+                $('.notifications').popover({
+                    title: "Notification Order",
+                    html:true,
+                    content: function () {
+                        var text = '<ul class="list-group">';
+
+                        for (i = 0; i < data.length; i++) {
+                            text += "<li class='list-group-item'>";
+                            text += "<b>"+ data[i].Customer.Name + " " + data[i].Customer.FamilyName + "</b> has ordered " + data[i].Product.Name + "<br>";
+                            text += "</li>";
+                        }
+                        text += "</ul>";
+
+                        return text;
+                    },
+                    placement: "bottom"
+                });
+
+
+            }).function(function () {
+                alert("sth failed");
+            });
+        })
+    </script>   
+</body>
+</html>
+
+
